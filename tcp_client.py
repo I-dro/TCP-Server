@@ -1,6 +1,12 @@
 import socket
 import struct
 
+
+# Change: Implement socket timeouts to avoid hanging indefinitely on network operations
+
+# I used struct to package data, also to ensure correct interpretation of 32-bit 
+
+
 def send_request(operation, operand1, operand2):
     host = 'localhost'
     port = 12345

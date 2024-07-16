@@ -4,6 +4,8 @@ import threading
 import time
 
 
+# I used struct to package data, also to ensure correct interpretation of 32-bit 
+
 # I used threading so that the server can handle multiple client connections simultaneously
 
 # I chose threading over processes because of the simplicity of the operation.
@@ -33,14 +35,14 @@ def perform_operation(operation, operand1, operand2):
         raise ValueError("This operaton is not accounted for: " % operation)
     
 def manage_client(conn, addr):
-    # rint the address of the connected client
+    # Print the address of the connected client
     print(f"Connection from {addr}")
 
     # I wanted something that would stop the function if the server did not recieve a
     # simple 2 operand 1 operator problem. A two signed 32-bit big-endian operands 
     # requires 4 bytes. and an operation requires 1
 
-    #this stops cases where the client provides an incomplete equation such as
+    # This stops cases where the client provides an incomplete equation such as
     # 1 +
 
 
@@ -57,6 +59,8 @@ def manage_client(conn, addr):
         conn.close()
         return 
     
+    # shutdown 
+    # Change: implement signal handling
     if operation == b'shutdown':
         print("Shutting down the server...")
         conn.sendall(struct.pack('>ff', 1, 0.0))
@@ -89,6 +93,7 @@ def manage_client(conn, addr):
 
     conn.close()
     
+    # change: Use asynchronous I/O with asyncio for better scalability
 def main():
     # Set up the server parameters
     host = 'localhost'
@@ -99,6 +104,8 @@ def main():
     server_socket.listen(5) # Listen for incoming connections
     print(f"Server listening on {host}:{port}")
 
+    # Change: Use a thread pool to manage client connections instead of creating 
+    # a new thread for each connection
     while True:
         # Accept a new connection from a client
         conn, addr = server_socket.accept()
